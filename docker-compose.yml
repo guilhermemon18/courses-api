@@ -1,0 +1,13 @@
+version: '3.1'
+services:
+  db:
+    build: .
+    container_name: devtraining-db
+    restart: always
+    ports:
+      - '5435:5432' # Mapeamento 5435 (host) -> 5432 (container)
+    volumes:
+      - .docker/dbdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=devtraining

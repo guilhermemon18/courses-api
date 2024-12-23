@@ -12,7 +12,8 @@ export const dataSourceOptions: DataSourceOptions = {
   password: 'docker',
   database: 'devtraining',
   entities: [Course, Tag],
-  synchronize: true,
+  synchronize: true, //reflte as alterações nas tabelas correspondentes com o código, deve ser utilizado apenas em ambiente de desenvolvimento!
+  //Deve-se utilizar migrações para garantir consistencias e robustez em ambientes de produção.
 };
 @Module({
   imports: [

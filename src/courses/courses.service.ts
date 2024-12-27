@@ -8,12 +8,10 @@ import { UpdateCourseDTO } from './dto/update-course.dto';
 
 @Injectable()
 export class CoursesService {
-  constructor(
-    @InjectRepository(Course)
-    private readonly courseRepository: Repository<Course>,
-    @InjectRepository(Tag)
-    private readonly tagRepository: Repository<Tag>,
-  ) {}
+  @InjectRepository(Course)
+  private readonly courseRepository: Repository<Course>;
+  @InjectRepository(Tag)
+  private readonly tagRepository: Repository<Tag>;
 
   //Busca um curso, relations e tags traz a relação de tags associada também.
   async findAll() {

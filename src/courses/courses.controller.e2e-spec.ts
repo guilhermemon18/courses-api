@@ -1,12 +1,12 @@
 import 'dotenv/config';
 import { Test, TestingModule } from '@nestjs/testing';
-import { CoursesController } from './courses.controller';
 import { INestApplication } from '@nestjs/common';
 import { Course } from './entities/courses.entity';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { Tag } from './entities/tags.entity';
 import { CoursesModule } from './courses.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import request from 'supertest';
 
 describe('CoursesController e2e tests', () => {
   let app: INestApplication;
@@ -17,7 +17,7 @@ describe('CoursesController e2e tests', () => {
   const dataSourceTest: DataSourceOptions = {
     type: 'postgres',
     host: process.env.DB_HOST,
-    port: 5433,
+    port: 5436,
     username: process.env.DB_USER,
     password: process.env.DB_PASS,
     database: process.env.DB_NAME,
@@ -51,7 +51,23 @@ describe('CoursesController e2e tests', () => {
     courses = await repository.find();
     await dataSource.destroy();
   });
-  // it('should be defined', () => {
-  //   expect(controller).toBeDefined()
-  // })
+
+  afterAll(async () => {
+    await module.close();
+  });
+
+  describe('POST /courses', () => {
+    it('should create a course', async () => {
+      const res = await request(app.getHttpServer())
+        .post('/courses')
+        .send(data)
+        .expect(201);
+      expect(res.body.id).toBeDefined();
+      expect(res.body.name).toEqual(data.name);
+      expect(res.body.description).toEqual(data.description);
+      expect(res.body.created_at).toBeDefined();
+      expect(res.body.tags[0].name).toEqual(data.tags[0]);
+      expect(res.body.tags[1].name).toEqual(data.tags[1]);
+    });
+  });
 });
